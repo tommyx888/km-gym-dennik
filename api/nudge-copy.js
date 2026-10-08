@@ -378,6 +378,35 @@ export const NUDGE_COPY = {
       ]
     }
   },
+  "sk": {
+    "friendly": {
+      "title": "Všetko v poriadku?",
+      "lines": [
+        "{0} stále čaká. Čo sa deje?",
+        "Dnes žiadny {0}? Aj krátky tréning zajtra sa počíta.",
+        "Ťažký deň? {0} počká. Zajtra je nový začiatok.",
+        "Hej, {0} dnes nebol. Všetko v poriadku?"
+      ]
+    },
+    "guilt": {
+      "title": "Chýbaš mi",
+      "lines": [
+        "{0} čakal celý večer pri dverách. Na teba.",
+        "Činka sa dnes na teba pýtala. Nevedel som, čo povedať.",
+        "Povedal som niečo zle? {0} za tebou smúti.",
+        "Držal som ti miesto na lavičke. Stále je prázdne."
+      ]
+    },
+    "drill": {
+      "title": "Pozor, nováčik!",
+      "lines": [
+        "Tvoje svaly si balia kufre. Zajtra {0}, žiadne výhovorky!",
+        "{0} sa sám neodcvičí, nováčik. Pohni sa!",
+        "Výhovorky činky nedvíhajú. Zajtra sa hlás na {0}!",
+        "Tvoje svaly nahlásili nezvestnú osobu. Ukáž sa na {0}!"
+      ]
+    }
+  },
   "th": {
     "friendly": {
       "title": "ทุกอย่างโอเคไหม?",

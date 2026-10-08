@@ -32,6 +32,8 @@ env:
 
 jobs:
   build:
+    # KM GYM fork: demo/obrazy publikuje len upstream
+    if: github.repository == 'DuarteSantos8/openGym'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
