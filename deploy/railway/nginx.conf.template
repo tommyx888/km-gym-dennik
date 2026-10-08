@@ -1,0 +1,65 @@
+# KM GYM Denník – nginx v jednom kontajneri s API (odvodené z web/nginx.conf.template upstreamu,
+# bez BASE_PATH a bez DNS resolvera: API beží na 127.0.0.1).
+server {
+    listen ${PORT};
+    root /usr/share/nginx/html;
+    index index.html;
+    absolute_redirect off;
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "same-origin" always;
+    add_header Content-Security-Policy "frame-ancestors 'none'" always;
+
+    # fotky/videá vlastných cvikov – väčšie telo, bez bufferovania
+    location ^~ /api/media/ {
+        client_max_body_size 48m;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_pass http://127.0.0.1:${API_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        # Railway edge posiela IP klienta v X-Forwarded-For – posúvame ju ďalej nezmenenú
+        proxy_set_header X-Forwarded-For $http_x_forwarded_for;
+        proxy_set_header X-Real-IP $http_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header CF-Connecting-IP "";
+    }
+
+    location ^~ /api/ {
+        client_max_body_size 5m;
+        proxy_pass http://127.0.0.1:${API_PORT};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $http_x_forwarded_for;
+        proxy_set_header X-Real-IP $http_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header CF-Connecting-IP "";
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(js|css|json|html)$ {
+        add_header Cache-Control "no-cache, must-revalidate";
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "same-origin" always;
+        add_header Content-Security-Policy "frame-ancestors 'none'" always;
+    }
+    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|webp|avif)$ {
+        add_header Cache-Control "public, max-age=2592000, immutable";
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "same-origin" always;
+        add_header Content-Security-Policy "frame-ancestors 'none'" always;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript image/svg+xml;
+    gzip_vary on;
+    gzip_min_length 1024;
+}
